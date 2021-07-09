@@ -11,7 +11,7 @@ class SouGSpider(object):
     def __init__(self):
         self.base_url = "http://pinyin.sogou.com"
         self.homepage_url = "http://pinyin.sogou.com/dict/"
-        self.base_dir = "/Users/Jackie/Downloads/lexlib"
+        self.base_dir = "HMM/lexlib"
 
     def callbackfunc(self, blocknum, blocksize, totalsize):
         """
@@ -36,17 +36,18 @@ class SouGSpider(object):
         tc = 0
         for ii in soup:
             fc += 1
-            print("Level 1 :" + ii.find(class_='dict_category_list_title').find('a').contents[0])
-            first_dir = os.path.join(self.base_dir, ii.find(class_='dict_category_list_title').find('a').contents[0])
+            print("Level 1 :" + ii.find(class_='dict_category_list_title').find('a').contents[0])#Level 1 获取指定领域页面链接
+            first_dir = os.path.join(self.base_dir, ii.find(class_='dict_category_list_title').find('a').contents[0])#拼接存储词表路径
             os.makedirs(first_dir, exist_ok=True)
 
+            #获取Level 2 词表集链接
             for k in ii.find(class_='catewords').find_all('a'):
                 secondclass = k.contents[0]
                 second_url = self.base_url + "%s" % (k['href'])
                 print(" " * 4 + "Level 2 :" + secondclass)
                 print(second_url)
                 second_dir = os.path.join(first_dir, secondclass)
-                os.makedirs(second_dir, exist_ok=True)
+                os.makedirs(second_dir, exist_ok=True)#创建Level 2 词表路径
 
                 sc += 1
                 soup2 = BeautifulSoup(requests.get(second_url).text, "html.parser")
@@ -61,7 +62,7 @@ class SouGSpider(object):
                         print(" " * 8 + "Level 3 :" + thirdclass + " " * 10 + "Downloading")
                         tc += 1
                         try:
-                            urlretrieve(third_url, "{}.scel".format(thirdclass), self.callbackfunc)
+                            urlretrieve(third_url, "{}.scel".format(thirdclass), self.callbackfunc)#下载词表
                         except Exception as e:
                             print(e)
                             print(secondclass)
