@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import struct
 import os
+from IOUtils import FileHelper
 # 主要两部分
 # 1.全局拼音表，貌似是所有的拼音组合，字典序
 #       格式为(index,len,pinyin)的列表
@@ -125,14 +126,21 @@ def scel2txt(file_name):
  
 if __name__ == '__main__':
     # scel所在文件夹路径
-    in_path = r"/Users/Jackie/Downloads/"
+    in_path = r"/Users/Jackie/Downloads/lexlib"
     # 输出词典所在文件夹路径
-    out_path = r"/Users/Jackie/Downloads/"
-    fin = [fname for fname in os.listdir(in_path) if fname[-5:] == ".scel"]
-    for f in fin:
+    out_path = r"/Users/Jackie/Downloads/lexlibtxt"
+    filelist = FileHelper.get_all_files(in_path)
+    # fin = [fname for fname in os.listdir(in_path) if fname[-5:] == ".scel"]
+    for f in filelist:
         try:
             for word in scel2txt(os.path.join(in_path, f)):
-                file_path=(os.path.join(out_path, str(f).split('.')[0] + '.txt'))
+                file_path=out_path+ f.replace(in_path,'').replace(".scel",'') + '.txt'
+                filedir = file_path[0:file_path.rindex('/')]
+                print(filedir)
+                print(file_path)
+                folder = os.path.exists(filedir)
+                if not folder:
+                    os.makedirs(filedir)
                 # 保存结果
                 with open(file_path,'a+',encoding='utf-8')as file:
                     file.write(word[2] + '\n')
