@@ -266,6 +266,8 @@ class RMRBUtils:
         # break
         for k, v in dic.items():
             counter = len(v)
+            if(counter==1):
+                continue
             sline = k + '\t' + str(counter) + '\t' + ' '.join(v) + '\n'
             writer.write(sline)
 
@@ -364,6 +366,6 @@ if __name__ == '__main__':
     # RMRBUtils().getWordNaturesCounter()
     # 创建词性转移矩阵数据
     # ==========================
-    RMRBUtils().natureReplacer()#转换词性标记
+    # RMRBUtils().natureReplacer()#转换词性标记
     RMRBUtils().getSignleWordNaturesCounter()#生成单词及其词性对应关系
-    RMRBUtils().data2Dictionary()#生成基础词汇词典
+    # RMRBUtils().data2Dictionary()#生成基础词汇词典
